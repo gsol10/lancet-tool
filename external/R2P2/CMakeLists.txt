@@ -52,3 +52,11 @@ target_include_directories( r2p2 PUBLIC ${R2P2_ROOT_DIR}/inc)
 target_compile_features( r2p2 PUBLIC c_std_11 )
 target_compile_options(r2p2 PUBLIC "-DLINUX") # PUBLIC = it will propagate as a compile option to all dependencies, too
 target_compile_options(r2p2 PUBLIC ${WITH_TIMESTAMPING})
+
+message(STATUS "Trying to find picotls-core")
+set(R2P2_PICOTLS ${R2P2_ROOT_DIR}/../deps/picotls)
+
+target_include_directories(r2p2 PUBLIC ${R2P2_ROOT_DIR}/../deps/picotls/include)
+#add_subdirectory(${R2P2_ROOT_DIR}/../deps/picotls external/R2P2)
+target_link_libraries(r2p2 ${R2P2_PICOTLS}/libpicotls-core.a)
+target_link_libraries(r2p2 ${R2P2_PICOTLS}/libpicotls-openssl.a)
