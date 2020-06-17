@@ -56,6 +56,20 @@ target_compile_options(r2p2 PUBLIC ${WITH_TIMESTAMPING})
 message(STATUS "Trying to find picotls-core")
 set(R2P2_PICOTLS ${R2P2_ROOT_DIR}/../deps/picotls)
 
+### For OpenSSL
+find_package(PkgConfig REQUIRED)
+pkg_search_module(OPENSSL REQUIRED openssl)
+
+if( OPENSSL_FOUND )
+    include_directories(${OPENSSL_INCLUDE_DIRS})
+    message(STATUS "Using OpenSSL ${OPENSSL_VERSION}")
+else()
+    # Error; with REQUIRED, pkg_search_module() will throw an error by it's own
+endif()
+
+target_link_libraries(r2p2 ${OPENSSL_LIBRARIES})
+
+##Link everything
 target_include_directories(r2p2 PUBLIC ${R2P2_ROOT_DIR}/../deps/picotls/include)
 #add_subdirectory(${R2P2_ROOT_DIR}/../deps/picotls external/R2P2)
 target_link_libraries(r2p2 ${R2P2_PICOTLS}/libpicotls-core.a)
