@@ -173,7 +173,8 @@ static void throughput_r2p2_main(void)
 			add_tx_timestamp(&tx_timestamp);
 
 			// send msg
-			r2p2_send_req(to_send->iovs, to_send->iov_cnt, ctx);
+			struct iovec server_name = {"TEST", 4};
+			r2p2_send_req(to_send->iovs, to_send->iov_cnt, ctx, server_name);
 
 			/* Bookkeeping */
 			send_res.bytes = to_send->iovs[0].iov_len;
@@ -460,7 +461,8 @@ static void symmetric_r2p2_main(void)
 			ctx->routing_policy = (int)(unsigned long)to_send->meta;
 
 			// send msg
-			r2p2_send_req(to_send->iovs, to_send->iov_cnt, ctx);
+			struct iovec server_name = {"TEST", 4};
+			r2p2_send_req(to_send->iovs, to_send->iov_cnt, ctx, server_name);
 
 			/* Bookkeeping */
 			send_res.bytes = to_send->iovs[0].iov_len;
@@ -493,6 +495,7 @@ struct transport_protocol *init_r2p2(void)
 	tp->tp_main[SYMMETRIC_NIC_TIMESTAMP_AGENT] = symmetric_nic_r2p2_main;
 	tp->tp_main[SYMMETRIC_AGENT] = symmetric_r2p2_main;
 
+	r2p2_tls_init(0);
 	if (r2p2_init(8000)) {
 		lancet_fprintf(stderr, "Failed to init r2p2\n");
 		return NULL;
